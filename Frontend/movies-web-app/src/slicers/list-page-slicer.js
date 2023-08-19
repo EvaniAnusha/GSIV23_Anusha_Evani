@@ -3,17 +3,17 @@ import axios from "axios";
 import { BaseURL, accessToken } from "../utilities/constants";
 
 const initialState = {
-  loading: false,
-  listOfMovies: [],
+  loadingList: false,
+  listOfMovies: {},
 };
 
 const listPageSlicer = createSlice({
   name: "listPage",
   initialState,
   reducers: {
-    setLoading: (state, action) => ({
+    setLoadingList: (state, action) => ({
       ...state,
-      loading: action.payload,
+      loadingList: action.payload,
     }),
     setListOfMovies: (state, action) => ({
       ...state,
@@ -22,10 +22,10 @@ const listPageSlicer = createSlice({
   },
 });
 
-export const { setLoading, setListOfMovies } = listPageSlicer.actions;
+export const { setLoadingList, setListOfMovies } = listPageSlicer.actions;
 
 export const fetchAllMovies = () => async (dispatch, getState) => {
-  dispatch(setLoading(true));
+  dispatch(setLoadingList(true));
   await axios
     .get(BaseURL, {
       headers: {
@@ -34,14 +34,16 @@ export const fetchAllMovies = () => async (dispatch, getState) => {
       },
     })
     .then((response) => {
-      const responseData = response.data;
-      dispatch(setListOfMovies(responseData));
+      if (response.data) {
+        const responseData = response.data;
+        dispatch(setListOfMovies(responseData));
+      }
     })
     .catch((error) => {
       console.error("error while fetching movies", error);
     })
     .finally(() => {
-      dispatch(setLoading(false));
+      dispatch(setLoadingList(false));
     });
 };
 
