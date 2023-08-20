@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Row, Layout } from "antd";
 import { fetchAllMovies } from "../slicers/list-page-slicer";
 import CardComponent from "../components/card/card-component";
 import Loader from "../components/loader/loader";
-import { Row, Layout } from "antd";
+import Header from "../components/header/header";
 import "../styling/list-page.scss";
 
 const ListPage = () => {
@@ -16,6 +17,7 @@ const ListPage = () => {
   return (
     <Row className="page-wrapper">
       <Loader loading={loadingList}>
+        <Header />
         <Layout className="page-contents">
           <CardComponent data={listOfMovies.results} />
         </Layout>

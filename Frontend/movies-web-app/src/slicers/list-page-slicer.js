@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { BaseURL, accessToken } from "../utilities/constants";
+import { BaseURL, accessToken, SearchURL } from "../utilities/constants";
 
 const initialState = {
   loadingList: false,
   listOfMovies: {},
+  searchParam: "",
 };
 
 const listPageSlicer = createSlice({
@@ -19,10 +20,15 @@ const listPageSlicer = createSlice({
       ...state,
       listOfMovies: action.payload,
     }),
+    setSearchParam: (state, action) => ({
+      ...state,
+      searchParam: action.payload,
+    }),
   },
 });
 
-export const { setLoadingList, setListOfMovies } = listPageSlicer.actions;
+export const { setLoadingList, setListOfMovies, setSearchParam } =
+  listPageSlicer.actions;
 
 export const fetchAllMovies = () => async (dispatch, getState) => {
   dispatch(setLoadingList(true));
@@ -62,5 +68,18 @@ export const fetchAllMovies = () => async (dispatch, getState) => {
       dispatch(setLoadingList(false));
     });
 };
+
+export const fetchSearchedMovies =
+  (searchTerm) => async (dispatch, getState) => {
+    dispatch(setLoadingList(true));
+    await axios
+      .get(SearchURL + "&query=" + searchTerm, {
+        headers: {
+          // Authorization: `Bearer ${accessToken}`,
+          accept: "application/json",
+        },
+      })
+      .then((response) => console.log("res=>", response));
+  };
 
 export default listPageSlicer.reducer;
