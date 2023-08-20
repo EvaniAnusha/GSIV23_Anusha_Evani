@@ -29,14 +29,30 @@ export const fetchAllMovies = () => async (dispatch, getState) => {
   await axios
     .get(BaseURL, {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        // Authorization: `Bearer ${accessToken}`,
         accept: "application/json",
       },
     })
     .then((response) => {
       if (response.data) {
         const responseData = response.data;
-        dispatch(setListOfMovies(responseData));
+        const startingIndex = responseData.indexOf("(");
+        const endingIndex = responseData.lastIndexOf(")");
+        if (startingIndex !== -1 && endingIndex !== -1) {
+          const jsonFormatData = responseData.substring(
+            startingIndex + 1,
+            endingIndex
+          );
+          try {
+            const parsedData = JSON.parse(jsonFormatData);
+            dispatch(setListOfMovies(parsedData));
+          } catch (err) {
+            console.error("error while parsing", err);
+          }
+        } else {
+          console.error("Invalid response format found");
+        }
+        // dispatch(setListOfMovies(responseData));
       }
     })
     .catch((error) => {

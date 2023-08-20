@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAllMovies } from "../slicers/list-page-slicer";
 import CardComponent from "../components/card/card-component";
 import Loader from "../components/loader/loader";
+import { Row, Layout } from "antd";
+import "../styling/list-page.scss";
 
 const ListPage = () => {
   const dispatch = useDispatch();
@@ -12,9 +14,13 @@ const ListPage = () => {
   }, []);
 
   return (
-    <Loader loading={loadingList}>
-      <CardComponent data={listOfMovies.results} />
-    </Loader>
+    <Row className="page-wrapper">
+      <Loader loading={loadingList}>
+        <Layout className="page-contents">
+          <CardComponent data={listOfMovies.results} />
+        </Layout>
+      </Loader>
+    </Row>
   );
 };
 
