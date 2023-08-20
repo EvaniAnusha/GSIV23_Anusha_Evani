@@ -1,5 +1,5 @@
 import React from "react";
-import SearchBar from "../search/search-bar";
+import SearchBar from "../search/search-bar.js";
 import { Row, Col } from "antd";
 import "../../styling/header.scss";
 

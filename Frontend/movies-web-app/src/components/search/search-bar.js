@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setSearchParam,
   fetchSearchedMovies,
-} from "../../slicers/list-page-slicer";
-import Search from "antd/es/input/Search";
+} from "../../slicers/list-page-slicer.js";
+import { Input } from "antd";
 import "../../styling/search-bar.scss";
+const { Search } = Input;
 
 const SearchBar = () => {
   const dispatch = useDispatch();
@@ -17,9 +18,7 @@ const SearchBar = () => {
     }
   }, [searchParam]);
   const handleSearch = () => {
-    if (searchValue !== "") {
-      dispatch(setSearchParam(searchValue));
-    }
+    dispatch(setSearchParam(searchValue));
   };
   return (
     <Search

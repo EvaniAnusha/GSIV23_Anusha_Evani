@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import history from "../utilities/history";
-import ListPage from "../pages/list-page";
+import history from "../utilities/history.js";
+import ListPage from "../pages/list-page.js";
 
 function RoutesConfiguration() {
   return (

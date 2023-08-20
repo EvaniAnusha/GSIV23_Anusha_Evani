@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import listPageReducer from "./slicers/list-page-slicer";
+import listPageReducer from "./slicers/list-page-slicer.js";
 
 const store = configureStore({
   reducer: {

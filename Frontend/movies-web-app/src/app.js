@@ -1,5 +1,5 @@
 import React from "react";
-import RoutesConfiguration from "./routing/routes";
+import RoutesConfiguration from "./routing/routes.js";
 import "./assets/styles/styles.scss";
 
 function App() {
