@@ -8,7 +8,9 @@ import Header from "../components/header/header.js";
 import "../styling/list-page.scss";
 
 const ListPage = () => {
-  const { loadingList } = useSelector((state) => state.listPage);
+  const { loadingList, searchResults, searchParam } = useSelector(
+    (state) => state.listPage
+  );
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -18,7 +20,7 @@ const ListPage = () => {
     setError(null);
     const options = {
       headers: {
-        // Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
         accept: "application/json",
       },
     };

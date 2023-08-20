@@ -12,13 +12,9 @@ const SearchBar = () => {
   const dispatch = useDispatch();
   const { searchParam } = useSelector((state) => state.listPage);
   const [searchValue, setSearchValue] = useState("");
-  useEffect(() => {
-    if (searchParam !== "") {
-      dispatch(fetchSearchedMovies(searchValue));
-    }
-  }, [searchParam]);
   const handleSearch = () => {
     dispatch(setSearchParam(searchValue));
+    dispatch(fetchSearchedMovies(searchValue));
   };
   return (
     <Search

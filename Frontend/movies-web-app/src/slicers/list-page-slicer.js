@@ -5,6 +5,7 @@ import { accessToken, SearchURL } from "../utilities/constants.js";
 const initialState = {
   loadingList: false,
   searchParam: "",
+  searchResults: [],
 };
 
 const listPageSlicer = createSlice({
@@ -19,10 +20,15 @@ const listPageSlicer = createSlice({
       ...state,
       searchParam: action.payload,
     }),
+    setSearchResults: (state, action) => ({
+      ...state,
+      searchResults: action.payload,
+    }),
   },
 });
 
-export const { setLoadingList, setSearchParam } = listPageSlicer.actions;
+export const { setLoadingList, setSearchParam, setSearchResults } =
+  listPageSlicer.actions;
 
 export const fetchSearchedMovies =
   (searchTerm) => async (dispatch, getState) => {
@@ -34,7 +40,17 @@ export const fetchSearchedMovies =
           accept: "application/json",
         },
       })
-      .then((response) => console.log("res=>", response));
+      .then((response) => {
+        if (response.data) {
+          dispatch(setSearchResults(response.data.results));
+        }
+      })
+      .catch((error) => {
+        console.error("error while fetching search results", error);
+      })
+      .finally(() => {
+        dispatch(setLoadingList(false));
+      });
   };
 
 export default listPageSlicer.reducer;
