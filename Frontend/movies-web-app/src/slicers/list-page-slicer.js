@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { accessToken, SearchURL } from "../utilities/constants.js";
+import { SearchURL } from "../utilities/constants.js";
 
 const initialState = {
   loadingList: false,
@@ -36,7 +36,6 @@ export const fetchSearchedMovies =
     await axios
       .get(SearchURL + "&query=" + searchTerm, {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
           accept: "application/json",
         },
       })

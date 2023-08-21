@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setSearchParam,
   fetchSearchedMovies,
+  setSearchResults,
 } from "../../slicers/list-page-slicer.js";
 import { Input } from "antd";
 import "../../styling/search-bar.scss";
@@ -10,11 +11,14 @@ const { Search } = Input;
 
 const SearchBar = () => {
   const dispatch = useDispatch();
-  const { searchParam } = useSelector((state) => state.listPage);
   const [searchValue, setSearchValue] = useState("");
   const handleSearch = () => {
     dispatch(setSearchParam(searchValue));
     dispatch(fetchSearchedMovies(searchValue));
+  };
+  const handleOnClear = () => {
+    dispatch(setSearchParam(""));
+    dispatch(setSearchResults([]));
   };
   return (
     <Search
@@ -24,7 +28,7 @@ const SearchBar = () => {
       placeholder="Search"
       onSearch={handleSearch}
       allowClear
-      enterButton
+      onClear={handleOnClear}
     />
   );
 };

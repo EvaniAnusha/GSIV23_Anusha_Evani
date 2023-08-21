@@ -1,56 +1,57 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Row, Layout } from "antd";
-import { BaseURL, accessToken } from "../utilities/constants.js";
+import { BaseURL } from "../utilities/constants.js";
+// import { fetchSearchedMovies } from "../slicers/list-page-slicer.js";
 import CardComponent from "../components/card/card-component.js";
 import Loader from "../components/loader/loader.js";
 import Header from "../components/header/header.js";
 import "../styling/list-page.scss";
 
 const ListPage = () => {
-  const { loadingList, searchResults, searchParam } = useSelector(
-    (state) => state.listPage
-  );
+  const { searchResults, searchParam } = useSelector((state) => state.listPage);
+  // const dispatch = useDispatch();
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
-  const fetchData = async () => {
+
+  const fetchData = async (searchTerm) => {
     setIsLoading(true);
     setError(null);
     const options = {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
         accept: "application/json",
       },
     };
     try {
-      const response = await fetch(`${BaseURL}&page=${page}`, options);
-      console.log(response);
+      const url = `${BaseURL}&page=${page}`;
+      console.log(url);
+      const response = await fetch(url, options);
       const data = await response.json();
-      console.log("data", data);
       setItems((prevItems) => {
         {
-          if (page === 1) {
-            console.log("page", page);
-            return [...data.results];
+          if (searchTerm.length > 0) {
+            return [...prevItems, ...searchResults];
           } else {
-            console.log("page number ===>", page);
-            return [...prevItems, ...data.results];
+            if (page === 1) {
+              return [...data.results];
+            } else {
+              return [...prevItems, ...data.results];
+            }
           }
         }
       });
       setPage((prevPage) => prevPage + 1);
     } catch (error) {
+      console.error("error while fetching", error);
       setError(error);
     } finally {
       setIsLoading(false);
     }
   };
   useEffect(() => {
-    if (page === 1) {
-      fetchData();
-    }
+    fetchData(searchParam);
   }, []);
   const handleScroll = () => {
     if (
@@ -60,22 +61,26 @@ const ListPage = () => {
     ) {
       return;
     }
-    fetchData();
+    fetchData(searchParam);
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [isLoading]);
-
+    if (searchParam.length === 0) {
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }
+  }, [isLoading, handleScroll]);
+  console.log("param search", searchParam);
   return (
     <React.Fragment>
       <Row className="page-wrapper">
-        <Loader loading={loadingList}>
+        <Loader loading={isLoading}>
           <Header />
           <Layout className="page-contents">
             {isLoading && <p>Loading...</p>}
-            <CardComponent data={items} />
+            <CardComponent
+              data={searchParam.length > 0 ? searchResults : items}
+            />
             {error && <p>Error: {error.message}</p>}
           </Layout>
         </Loader>
