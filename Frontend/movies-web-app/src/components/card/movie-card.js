@@ -1,9 +1,15 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { Col, Card } from "antd";
+import {
+  setMovieID,
+  fetchMovieDetails,
+} from "../../slicers/details-page-slicer.js";
 import imageNA from "../../../src/assets/images/imageNA.jpg";
 import "../../styling/movie-card.scss";
 const { Meta } = Card;
 const MovieCard = ({ movie }) => {
+  const dispatch = useDispatch();
   const componentToRender = () => {
     if (movie) {
       return (
@@ -13,6 +19,10 @@ const MovieCard = ({ movie }) => {
         </div>
       );
     }
+  };
+  const handleDetailsOnClick = () => {
+    dispatch(setMovieID(movie.id));
+    dispatch(fetchMovieDetails(movie.id));
   };
   return (
     <Col className="movie-info">
@@ -29,6 +39,7 @@ const MovieCard = ({ movie }) => {
             }
           />
         }
+        onClick={handleDetailsOnClick}
         className="movie-card-container"
       >
         <Meta
