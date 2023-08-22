@@ -26,7 +26,6 @@ const ListPage = () => {
     };
     try {
       const url = `${BaseURL}&page=${page}`;
-      console.log(url);
       const response = await fetch(url, options);
       const data = await response.json();
       setItems((prevItems) => {
@@ -70,7 +69,6 @@ const ListPage = () => {
       return () => window.removeEventListener("scroll", handleScroll);
     }
   }, [isLoading, handleScroll]);
-  console.log("param search", searchParam);
   return (
     <React.Fragment>
       <Row className="page-wrapper">

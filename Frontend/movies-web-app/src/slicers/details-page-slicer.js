@@ -34,7 +34,7 @@ export const fetchMovieDetails = (movieiD) => async (dispatch, getState) => {
     })
     .then((response) => {
       if (response.data) {
-        console.log("det response ====>", response);
+        console.log("details of movie response ===>", response.data);
       }
     })
     .catch((error) => {
