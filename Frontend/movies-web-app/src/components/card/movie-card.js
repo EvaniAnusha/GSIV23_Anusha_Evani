@@ -4,9 +4,12 @@ import { Col, Card } from "antd";
 import {
   setMovieID,
   fetchMovieDetails,
+  setMovieDetailsInPage,
 } from "../../slicers/details-page-slicer.js";
 import imageNA from "../../../src/assets/images/imageNA.jpg";
 import "../../styling/movie-card.scss";
+import history from "../../utilities/history.js";
+import DetailsPage from "../../pages/details-page.js";
 const { Meta } = Card;
 const MovieCard = ({ movie }) => {
   const dispatch = useDispatch();
@@ -23,6 +26,8 @@ const MovieCard = ({ movie }) => {
   const handleDetailsOnClick = () => {
     dispatch(setMovieID(movie.id));
     dispatch(fetchMovieDetails(movie.id));
+    history.push("/details-page");
+    dispatch(setMovieDetailsInPage(true));
   };
   return (
     <Col className="movie-info">

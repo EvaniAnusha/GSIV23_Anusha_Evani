@@ -1,0 +1,35 @@
+.details-wrapper {
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  .page-contents {
+    background-color: #ffffff;
+    .col {
+      display: inline-flex;
+      .poster-holder {
+        margin: 1%;
+        .poster-dimensions {
+          width: 16vw;
+          height: 25vh;
+        }
+      }
+      .details-of-movie {
+        display: list-item;
+        list-style: none;
+        .title-header {
+          font-weight: bold;
+          font-size: large;
+        }
+        .release-runtime-params {
+          font-weight: 700;
+          font-size: medium;
+        }
+        .description {
+          font-weight: 500;
+          font-size: medium;
+          max-width: 100vw;
+        }
+      }
+    }
+  }
+}

@@ -6,7 +6,6 @@ const initialState = {
   loadingList: false,
   searchParam: "",
   searchResults: [],
-  // searchingPage: null,
 };
 
 const listPageSlicer = createSlice({
@@ -25,10 +24,6 @@ const listPageSlicer = createSlice({
       ...state,
       searchResults: action.payload,
     }),
-    // setSearchingPage: (state, action) => ({
-    //   ...state,
-    //   searchingPage: action.payload,
-    // }),
   },
 });
 

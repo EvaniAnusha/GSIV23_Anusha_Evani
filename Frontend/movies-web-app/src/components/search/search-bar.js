@@ -15,12 +15,6 @@ const SearchBar = () => {
   const [searchValue, setSearchValue] = useState("");
   const [searchPage, setSearchPage] = useState(1);
   const handlingScroll = () => {
-    // const scrollThreshold = 200;
-    // const isScrollingUp = window.scrollY < scrollThreshold;
-    // if (isScrollingUp && searchPage > 1) {
-    //   setSearchPage((currPage) => currPage - 1);
-    //   return;
-    // } else
     if (
       window.innerHeight + document.documentElement.scrollTop !==
         document.documentElement.offsetHeight ||

@@ -1,17 +1,32 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "../search/search-bar.js";
 import { Row, Col } from "antd";
 import homeicon from "../../assets/images/home-icon.png";
 import "../../styling/header.scss";
+import { setMovieDetailsInPage } from "../../slicers/details-page-slicer.js";
+import history from "../../utilities/history.js";
 
 const Header = () => {
+  const { movieDetailsInPage } = useSelector((state) => state.detailsPage);
+  const dispatch = useDispatch();
+  const ComponentToRender = () => {
+    if (movieDetailsInPage) {
+      return <span className="details-header">Movie Details</span>;
+    } else {
+      return <SearchBar />;
+    }
+  };
+  const handleOnClick = () => {
+    history.push("/");
+    dispatch(setMovieDetailsInPage(false));
+  };
+
   return (
     <Row className="header-wrapper">
-      <Col className="search">
-        <SearchBar />
-      </Col>
+      <Col className="search">{ComponentToRender()}</Col>
       <Col className="home-icon">
-        <img src={homeicon} className="home" />
+        <img src={homeicon} className="home" onClick={handleOnClick} />
       </Col>
     </Row>
   );
