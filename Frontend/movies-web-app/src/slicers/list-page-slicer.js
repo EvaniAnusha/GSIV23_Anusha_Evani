@@ -6,6 +6,7 @@ const initialState = {
   loadingList: false,
   searchParam: "",
   searchResults: [],
+  // searchingPage: null,
 };
 
 const listPageSlicer = createSlice({
@@ -24,6 +25,10 @@ const listPageSlicer = createSlice({
       ...state,
       searchResults: action.payload,
     }),
+    // setSearchingPage: (state, action) => ({
+    //   ...state,
+    //   searchingPage: action.payload,
+    // }),
   },
 });
 
@@ -31,17 +36,18 @@ export const { setLoadingList, setSearchParam, setSearchResults } =
   listPageSlicer.actions;
 
 export const fetchSearchedMovies =
-  (searchTerm) => async (dispatch, getState) => {
+  (searchTerm, page) => async (dispatch, getState) => {
     dispatch(setLoadingList(true));
     await axios
-      .get(SearchURL + "&query=" + searchTerm, {
+      .get(SearchURL + "&query=" + searchTerm + "&page=" + page, {
         headers: {
           accept: "application/json",
         },
       })
       .then((response) => {
         if (response.data) {
-          dispatch(setSearchResults(response.data.results));
+          const data = response.data.results;
+          dispatch(setSearchResults(data));
         }
       })
       .catch((error) => {

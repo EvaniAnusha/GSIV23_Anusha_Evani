@@ -12,6 +12,7 @@ const ListPage = () => {
   const { searchResults, searchParam } = useSelector((state) => state.listPage);
   // const dispatch = useDispatch();
   const [items, setItems] = useState([]);
+  const [searchItems, setSearchItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
@@ -30,17 +31,22 @@ const ListPage = () => {
       const data = await response.json();
       setItems((prevItems) => {
         {
-          if (searchTerm.length > 0) {
-            return [...prevItems, ...searchResults];
+          if (page === 1) {
+            return [...data.results];
           } else {
-            if (page === 1) {
-              return [...data.results];
-            } else {
-              return [...prevItems, ...data.results];
-            }
+            return [...prevItems, ...data.results];
           }
         }
       });
+      if (searchTerm.length > 0) {
+        setSearchItems((preItems) => {
+          if (page === 1) {
+            return [...searchResults];
+          } else {
+            return [...preItems, ...searchResults];
+          }
+        });
+      }
       setPage((prevPage) => prevPage + 1);
     } catch (error) {
       console.error("error while fetching", error);
