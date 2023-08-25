@@ -4,6 +4,7 @@ import {
   setSearchParam,
   fetchSearchedMovies,
   setSearchResults,
+  setSearchOn,
 } from "../../slicers/list-page-slicer.js";
 import { Input } from "antd";
 import "../../styling/search-bar.scss";
@@ -11,37 +12,24 @@ const { Search } = Input;
 
 const SearchBar = () => {
   const dispatch = useDispatch();
-  const { loadingList, searchResults } = useSelector((state) => state.listPage);
+  const { searchPage } = useSelector((state) => state.listPage);
   const [searchValue, setSearchValue] = useState("");
-  const [searchPage, setSearchPage] = useState(1);
-  const handlingScroll = () => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop !==
-        document.documentElement.offsetHeight ||
-      loadingList
-    ) {
-      return;
-    }
-    setSearchPage((prevPage) => prevPage + 1);
-  };
   const handleSearch = () => {
     dispatch(setSearchParam(searchValue));
     dispatch(fetchSearchedMovies(searchValue, searchPage));
+    dispatch(setSearchOn(true));
   };
   const handleOnClear = () => {
     dispatch(setSearchParam(""));
     dispatch(setSearchResults([]));
-    setSearchPage(1);
+    dispatch(setSearchOn(false));
   };
   useEffect(() => {
-    dispatch(fetchSearchedMovies(searchValue, searchPage));
-  }, [searchPage]);
-  useEffect(() => {
-    if (searchValue.length !== 0) {
-      window.addEventListener("scroll", handlingScroll);
-      return () => window.removeEventListener("scroll", handlingScroll);
+    if (searchValue.length > 0) {
+      dispatch(fetchSearchedMovies(searchValue, searchPage));
     }
-  }, [handlingScroll]);
+  }, [searchPage]);
+
   return (
     <Search
       className="search-bar"

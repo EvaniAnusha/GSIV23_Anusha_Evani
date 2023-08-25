@@ -3,7 +3,33 @@
   height: 100%;
   z-index: 0;
   .page-contents {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
     background-color: #ffffff;
     padding: 1%;
+    .loading-message {
+      padding: 1%;
+    }
+    .movies-display {
+      .movies-container {
+        display: flex;
+        padding: 1%;
+        margin: 0% 2%;
+      }
+    }
+    .footer {
+      display: inline-flex;
+      .error-message {
+        display: inline-flex;
+        padding: 1%;
+        margin: 1%;
+      }
+      .pagination {
+        display: inline-flex;
+        padding: 1%;
+        margin: 1%;
+      }
+    }
   }
 }

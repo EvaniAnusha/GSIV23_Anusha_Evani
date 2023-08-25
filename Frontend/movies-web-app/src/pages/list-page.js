@@ -1,80 +1,100 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Row, Layout } from "antd";
-import { BaseURL } from "../utilities/constants.js";
+import { Row, Layout, Pagination, Col } from "antd";
+import { fetchAllMovies, setSearchPage } from "../slicers/list-page-slicer.js";
 import CardComponent from "../components/card/card-component.js";
 import Loader from "../components/loader/loader.js";
 import Header from "../components/header/header.js";
 import "../styling/list-page.scss";
 
 const ListPage = () => {
-  const { searchResults, searchParam } = useSelector((state) => state.listPage);
-  const [items, setItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    searchResults,
+    searchParam,
+    searchOn,
+    allMoviesData,
+    loadingAllResults,
+    loadingSearchResults,
+  } = useSelector((state) => state.listPage);
+  const dispatch = useDispatch();
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
 
-  const fetchData = async (searchTerm) => {
-    setIsLoading(true);
-    setError(null);
-    const options = {
-      headers: {
-        accept: "application/json",
-      },
-    };
-    try {
-      const url = `${BaseURL}&page=${page}`;
-      const response = await fetch(url, options);
-      const data = await response.json();
-      setItems((prevItems) => {
-        {
-          if (searchTerm.length > 0) {
-            return [...searchResults];
-          } else if (page === 1) {
-            return [...data.results];
-          } else {
-            return [...prevItems, ...data.results];
-          }
-        }
-      });
-      setPage((prevPage) => prevPage + 1);
-    } catch (error) {
-      console.error("error while fetching the list of movies", error);
-      setError(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
   useEffect(() => {
-    fetchData(searchParam);
-  }, []);
-  const handleScroll = () => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop !==
-        document.documentElement.offsetHeight ||
-      isLoading
-    ) {
-      return;
+    dispatch(fetchAllMovies(page));
+    if (searchOn) {
+      if (page <= searchResults.total_pages) {
+        dispatch(setSearchPage(page));
+      }
     }
-    fetchData(searchParam);
-  };
+  }, [page]);
 
-  useEffect(() => {
-    if (searchParam.length === 0) {
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
+  const handlePagination = (e) => {
+    setPage(e.target.value);
+    if (searchOn) {
+      let temp = page;
+      if (temp > searchResults.total_pages) {
+        dispatch(setSearchPage(1));
+      } else {
+        dispatch(setSearchPage(e.target.value));
+      }
     }
-  }, [isLoading, handleScroll]);
+  };
+  useEffect(() => {
+    if (
+      allMoviesData.length === 0 ||
+      (searchParam.length > 0 && searchResults.length === 0)
+    ) {
+      setError("Error occurred, Please try later");
+    }
+  }, []);
+
   return (
     <Row className="page-wrapper">
-      <Loader loading={isLoading}>
+      <Loader loading={loadingAllResults}>
         <Header />
         <Layout className="page-contents">
-          {isLoading && <p>Loading...</p>}
-          <CardComponent
-            data={searchParam.length > 0 ? searchResults : items}
-          />
-          {error && <p>Error: {error.message}, Please try later</p>}
+          <Row>
+            <Col span={24} className="loading-message">
+              {loadingAllResults && <p>Loading...</p>}
+            </Col>
+            <Col span={24} className="movies-display">
+              <Col span={24} className="movies-container">
+                <CardComponent
+                  data={searchParam.length > 0 ? searchResults : allMoviesData}
+                />
+              </Col>
+            </Col>
+            <Col span={24} className="footer">
+              <Col span={12} align="left" className="error-message">
+                {!loadingAllResults || !loadingSearchResults
+                  ? error && <p>{error}</p>
+                  : ""}
+              </Col>
+              <Col span={12} align="right" className="pagination">
+                <Pagination
+                  size="small"
+                  disabled={
+                    loadingAllResults ||
+                    loadingSearchResults ||
+                    searchResults.length === 0 ||
+                    allMoviesData.length === 0
+                  }
+                  total={
+                    searchParam.length > 0
+                      ? searchResults.total_pages
+                      : allMoviesData.total_pages
+                  }
+                  showSizeChanger
+                  showQuickJumper
+                  showTotal={(total) => `Total ${total} items`}
+                  onChange={(e) => {
+                    handlePagination(e);
+                  }}
+                />
+              </Col>
+            </Col>
+          </Row>
         </Layout>
       </Loader>
     </Row>

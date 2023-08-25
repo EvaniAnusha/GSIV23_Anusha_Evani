@@ -7,16 +7,9 @@ import "../../styling/header.scss";
 import { setMovieDetailsInPage } from "../../slicers/details-page-slicer.js";
 import history from "../../utilities/history.js";
 
-const Header = () => {
+const Header = (searchP) => {
   const { movieDetailsInPage } = useSelector((state) => state.detailsPage);
   const dispatch = useDispatch();
-  const ComponentToRender = () => {
-    if (movieDetailsInPage) {
-      return <span className="details-header">Movie Details</span>;
-    } else {
-      return <SearchBar />;
-    }
-  };
   const handleOnClick = () => {
     history.push("/");
     dispatch(setMovieDetailsInPage(false));
@@ -24,7 +17,13 @@ const Header = () => {
 
   return (
     <Row className="header-wrapper">
-      <Col className="search">{ComponentToRender()}</Col>
+      <Col className="search">
+        {movieDetailsInPage ? (
+          <span className="details-header">Movie Details</span>
+        ) : (
+          <SearchBar />
+        )}
+      </Col>
       <Col className="home-icon">
         <img src={homeicon} className="home" onClick={handleOnClick} />
       </Col>

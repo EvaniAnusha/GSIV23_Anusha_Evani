@@ -7,7 +7,7 @@ const CardComponent = ({ data }) => {
     return (
       <Row gutter={[16, 16]}>
         {data.map((item) => (
-          <Col key={item.id} xs={6} sm={6} md={6} lg={6}>
+          <Col key={item.id} xs={24} sm={12} md={6} lg={6}>
             <MovieCard key={item.id} movie={item} />
           </Col>
         ))}
