@@ -67,7 +67,7 @@ export const fetchAllMovies = (page) => async (dispatch, getState) => {
     })
     .then((response) => {
       if (response.data) {
-        const data = response.data.results;
+        const data = response.data;
         dispatch(setAllMoviesData(data));
       }
     })
@@ -90,7 +90,7 @@ export const fetchSearchedMovies =
       })
       .then((response) => {
         if (response.data) {
-          const data = response.data.results;
+          const data = response.data;
           dispatch(setSearchResults(data));
         }
       })

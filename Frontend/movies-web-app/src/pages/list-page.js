@@ -30,20 +30,20 @@ const ListPage = () => {
   }, [page]);
 
   const handlePagination = (e) => {
-    setPage(e.target.value);
+    setPage(e);
     if (searchOn) {
       let temp = page;
       if (temp > searchResults.total_pages) {
         dispatch(setSearchPage(1));
       } else {
-        dispatch(setSearchPage(e.target.value));
+        dispatch(setSearchPage(e));
       }
     }
   };
   useEffect(() => {
-    if (
-      allMoviesData.length === 0 ||
-      (searchParam.length > 0 && searchResults.length === 0)
+    if ( (allMoviesData.type !== undefined &&
+      allMoviesData.results.length === 0) ||
+      (searchParam.length > 0 && searchResults.type !== undefined && searchResults.results.length === 0)
     ) {
       setError("Error occurred, Please try later");
     }
@@ -61,7 +61,7 @@ const ListPage = () => {
             <Col span={24} className="movies-display">
               <Col span={24} className="movies-container">
                 <CardComponent
-                  data={searchParam.length > 0 ? searchResults : allMoviesData}
+                  data={searchParam.length > 0 ? searchResults.results : allMoviesData.results}
                 />
               </Col>
             </Col>
@@ -77,8 +77,8 @@ const ListPage = () => {
                   disabled={
                     loadingAllResults ||
                     loadingSearchResults ||
-                    searchResults.length === 0 ||
-                    allMoviesData.length === 0
+                    (searchParam.length > 0 && searchResults.type !== undefined && searchResults.results.length === 0) ||
+                    (allMoviesData.type !==undefined && allMoviesData.results.length === 0)
                   }
                   total={
                     searchParam.length > 0
